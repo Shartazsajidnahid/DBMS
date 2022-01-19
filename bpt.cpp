@@ -55,7 +55,7 @@ void BPTree::search(string x)
         {
             for (int i = 0;i<cursor->size;i++)
 			{
-				//cout << x << " " << cursor->key[i] << "\n";
+				
                 if (x < cursor->key[i])
                 {
                     cursor = cursor->ptr[i];
@@ -72,7 +72,6 @@ void BPTree::search(string x)
 
         for (int i=0;i<cursor->size;i++)
 		{
-			//cout << x << " " << cursor->key[i] << " " << cursor->value[i] << "\n";
             if (cursor->key[i] == x)
             {
                 cout << cursor->key[i] << " " << cursor->value[i] << "\n";
@@ -99,11 +98,14 @@ void BPTree::insert(string x, string y)
         Node* cursor = root;
         Node* parent;
 
+         // Till we reach leaf node
         while (cursor->IS_LEAF==false)
         {
             parent = cursor;
+           
             for (int i=0;i<cursor->size;i++)
             {
+                
                 if (x<cursor->key[i])
                 {
                     cursor=cursor->ptr[i];
@@ -144,6 +146,7 @@ void BPTree::insert(string x, string y)
 
         else
         {
+            // Create a newLeaf node
             Node* newLeaf = new Node;
 
             string virtualNode[MAX + 1];
@@ -156,12 +159,12 @@ void BPTree::insert(string x, string y)
             }
             int i = 0, j;
 
-            // Traverse to find where the new
-            // node is to be inserted
+            // Traverse to find where the new node is to be inserted
             while (x>virtualNode[i] && i<MAX)
             {
                 i++;
             }
+            
 
             for (int j=MAX;j>i;j--)
             {
@@ -216,7 +219,7 @@ void BPTree::insert(string x, string y)
 
 void BPTree::insertInternal(string x, string y,Node* cursor,Node* child)
 {
-	//cout << x << " " << y << endl;
+	
     if (cursor->size<MAX)
     {
         int i=0;
@@ -314,8 +317,7 @@ void BPTree::insertInternal(string x, string y,Node* cursor,Node* child)
 
         else
         {
-            insertInternal(cursor->key[cursor->size], cursor->value[cursor->size],
-            findParent(root,cursor), newInternal);
+            insertInternal(cursor->key[cursor->size], cursor->value[cursor->size],findParent(root,cursor), newInternal);
         }
     }
 }
@@ -361,26 +363,22 @@ int main()
     ifstream ifile;
     ifile.open("input.txt");
     if(!ifile) return 0;
+
     while(ifile>>english)
     {
 		cout << flush;
     	getline(ifile,bangla);
     	//cout << english << " " << bangla << endl;
-    	node.insert(english,bangla);
+    	node.insert(english,bangla); 
     }
+
 	cout << "Enter string to search : \n";
 	string s;
 	while(cin >> s)
 	{
 		node.search(s);
+        if(s=="0") break;
 	}
-    // Create B+ Tree
-    /*node.insert("Hello", "a");
-    node.insert("Mushfiq", "b");
-    node.insert("Abrakadabra", "c");
-    node.search("Mushfiq");
-    node.search("Hi");*/
-
 
     return 0;
 }
