@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+
 using namespace std;
 int MAX = 3;
 
@@ -50,6 +51,10 @@ void BPTree::search(string x)
     else
     {
         Node* cursor = root;
+
+       // for_each(x.begin(), x.end(), [](char & c){
+        //  c = ::tolower(c);
+       // });
 
         while (cursor->IS_LEAF == false)
         {
@@ -374,11 +379,28 @@ int main()
 
 	cout << "Enter string to search : \n";
 	string s;
+    
 	while(cin >> s)
-	{
+	{   
 		node.search(s);
         if(s=="0") break;
 	}
+   
+    
+    /* searching multiple words
+    string str[100];
+    int i = 0;
+    while(1)
+	{   
+        cin >> s;
+        if(s=="0") break;
+        str[i++] = s;
+	}
+    int j=0;
+    while(j<=i){
+        node.search(str[j++]);
+    }
+    */
 
     return 0;
 }
