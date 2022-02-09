@@ -3,6 +3,7 @@
 using namespace std;
 
 const int k = 2;
+int total_height = 0;
 
 // A structure to represent node of kd tree
 struct Node
@@ -23,26 +24,7 @@ struct Node* newNode(int arr[])
 	return temp;
 }
 
-// Inserts a new node and returns root of modified tree
-// The parameter depth is used to decide axis of comparison
-Node *insertRec(Node *root, int point[], unsigned depth)
-{
-	// Tree is empty?
-	if (root == NULL)
-	    return newNode(point);
 
-	// Calculate current dimension (cd) of comparison
-	unsigned cd = depth % k;
-
-	// Compare the new point with root on current dimension 'cd'
-	// and decide the left or right subtree
-	if (point[cd] < (root->point[cd]))
-		root->left = insertRec(root->left, point, depth + 1);
-	else
-		root->right = insertRec(root->right, point, depth + 1);
-
-	return root;
-}
 
 void insert(int point[])
 {
@@ -65,11 +47,11 @@ void insert(int point[])
 
 	while(1){
 		prev = temp;
-		cout << endl << temp->point[0] << " " << temp->point[1]  << endl;
-		if(temp->left==NULL) cout << " left null ";
-		else cout << "left: " << temp->left->point[0] << " " <<temp->left->point[1] ;
-		if(temp->right==NULL) cout << " right null ";
-		else cout << "right: " << temp->right->point[0] << temp->right->point[1];
+		//cout << endl << temp->point[0] << " " << temp->point[1]  << endl;
+		//if(temp->left==NULL) cout << " left null ";
+		//else cout << "left: " << temp->left->point[0] << " " <<temp->left->point[1] ;
+		//if(temp->right==NULL) cout << " right null ";
+		//else cout << "right: " << temp->right->point[0] << temp->right->point[1];
 		// Calculate current dimension (cd) of comparison
 		unsigned cd = height % k;
 
@@ -83,29 +65,25 @@ void insert(int point[])
 		if (temp == NULL)
 			break;
 	}
- 	cout << endl << endl << point[0] << "," << point[1] << " inserted ";
-	if(flag==1)
-		prev->left = newNode(point), cout << "left " << endl;
-	else 
-		prev->right = newNode(point), cout << "right " << endl;
+ 	//cout << endl << endl << point[0] << "," << point[1] << " inserted ";
 
+	if(flag==1){
+		prev->left = newNode(point);
+		//cout << "left " << endl;
+	}
 		
+	else {
+		prev->right = newNode(point);
+	   // cout << "right " << endl;
+	}
 		
+	if(height>total_height) total_height = height;	
 }
 
 
-// Function to insert a new point with given point in
-// KD Tree and return new root. It mainly uses above recursive
-// function "insertRec()"
-/*
-Node* insert(Node *root, int point[])
-{
-	return insertRec(root, point, 0);
-}
-*/
 // A utility method to determine if two Points are same
 // in K Dimensional space
-bool arePointsSame(int point1[], int point2[])
+bool check_equal(int point1[], int point2[])
 {
 	// Compare individual pointinate values
 	for (int i = 0; i < k; ++i)
@@ -117,24 +95,6 @@ bool arePointsSame(int point1[], int point2[])
 
 // Searches a Point represented by "point[]" in the K D tree.
 // The parameter depth is used to determine current axis.
-bool searchRec(Node* root, int point[], unsigned depth)
-{
-	// Base cases
-	if (root == NULL)
-		return false;
-	if (arePointsSame(root->point, point))
-		return true;
-
-	// Current dimension is computed using current depth and total
-	// dimensions (k)
-	unsigned cd = depth % k;
-
-	// Compare point with root with respect to cd (Current dimension)
-	if (point[cd] < root->point[cd])
-		return searchRec(root->left, point, depth + 1);
-
-	return searchRec(root->right, point, depth + 1);
-}
 
 bool search(int point[]){
 	unsigned height = 0;
@@ -148,7 +108,7 @@ bool search(int point[]){
 	while(1){
 		//cout << endl << temp->point[0] << " " << temp->point[1] ;
 		
-		if (arePointsSame(temp->point, point))
+		if (check_equal(temp->point, point))
 			return true;
 		// Calculate current dimension (cd) of comparison
 		unsigned cd = height % k;
@@ -167,15 +127,68 @@ bool search(int point[]){
 
 }
 
-// Searches a Point in the K D tree. It mainly uses
-// searchRec()
-/*
-bool search(Node* root, int point[])
-{
-	// Pass current depth as 0
-	return searchRec(root, point, 0);
+void printTree(){
+	if(root == NULL) {
+		cout << endl << "Tree doesn't exist";
+	}
+
+
+	/*
+	vector<int> points;
+	vector<vector<int>> nodes;
+	
+	for(int i=0;i<2;i++) 
+		points.push_back(root->point[i]);
+
+	nodes.push_back(points);
+	
+	
+	
+	
+	while (!nodes.empty())
+	{	
+		vector<int> left = nodes[0]; 
+		vector<int> right = nodes[0]; 
+		cout << " hey " <<  newp[0] << " " << newp[1]; 
+		nodes.pop_back();
+	}
+
+	*/
+
+
 }
-*/
+
+bool search1(int point1[], int point2[]){\
+	
+}
+
+void printPostorder(struct Node* node)
+{
+    if (node == NULL){
+		cout << "null ";
+		return;
+	}
+        
+
+
+ 
+    // first recur on left subtree
+    printPostorder(node->left);
+
+			 // now deal with the node
+	if(node==root) cout << "\t";
+	cout << "{ " ;
+	for(int i=0;i<k;i++)
+    	cout << node->point[i] << " ";
+	cout << "} " ;
+	if(node==root) cout << "\t";
+ 
+    // then recur on right subtree
+    printPostorder(node->right);
+ 
+   
+}
+
 
 // Driver program to test above functions
 int main()
@@ -189,12 +202,20 @@ int main()
 	for (int i=0; i<n; i++)
 		insert( points[i]);
 
-	cout << "\n root: " << root->point[0] << " " <<  root->point[1];
+	cout << "\nroot: " << root->point[0] << " " <<  root->point[1] << endl;
 
-	int point1[] = {10, 19};
-	(search(point1))? cout << "Found\n": cout << "Not Found\n";
+	cout << endl << "total height = " << total_height << endl;
 
-	int point2[] = {12, 19};
+	//printTree();
+	printPostorder(root);
+
+
+	cout << endl;
+	 
+	int point1[] = {10, 116};
+	(search(point1))? cout  << "Found\n": cout << "Not Found\n";
+
+	int point2[] = {10, 19};
 	(search(point2))? cout << "Found\n": cout << "Not Found\n";
 
 	return 0;
