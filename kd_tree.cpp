@@ -127,38 +127,74 @@ bool search(int point[]){
 
 }
 
-void printTree(){
-	if(root == NULL) {
-		cout << endl << "Tree doesn't exist";
-	}
-
-
-	/*
-	vector<int> points;
-	vector<vector<int>> nodes;
-	
-	for(int i=0;i<2;i++) 
-		points.push_back(root->point[i]);
-
-	nodes.push_back(points);
-	
-	
-	
-	
-	while (!nodes.empty())
-	{	
-		vector<int> left = nodes[0]; 
-		vector<int> right = nodes[0]; 
-		cout << " hey " <<  newp[0] << " " << newp[1]; 
-		nodes.pop_back();
-	}
-
-	*/
-
-
+bool FindPoint(int x1, int y1, int x2,
+               int y2, int x, int y)
+{
+    if (x >= x1 and x <= x2 and y >= y1 and y <= y2)
+        return true;
+ 
+    return false;
 }
 
-bool search1(int point1[], int point2[]){\
+
+void range_search(Node* temp, int point1[], int point2[], int depth){
+    // Base cases
+    if (temp == NULL)
+        return;
+
+  //  if (arePointsSame(root->point, point))
+    //    return true;
+
+
+	// calculating limits 
+
+	int max[k], min[k];
+	for(int i=0;i<k;i++){
+		if(point1[i] < point2[i]){
+			min[i] = point1[i]; max[i] = point2[i];
+		}
+		else {
+			min[i] = point2[i]; max[i] = point1[i];
+		}
+	}
+	
+	//cout << "limits: " ;
+	for(int i=0;i<k;i++){
+		
+		//cout<<	min[i] << " " << max[i] << endl;
+		
+	}
+    // Current dimension is computed using current depth and total
+    // dimensions (k)
+    unsigned cd = depth % k;
+
+    // Compare point with root with respect to cd (Current dimension)
+    if (temp->point[cd] < min[cd])
+         range_search(temp->right, point1, point2, depth + 1);
+	else if(temp->point[cd] > max[cd])
+   		 range_search(temp->left, point1, point2, depth + 1);
+
+	else{
+		int j = 0;
+
+		for(; j<k; j++){
+			//cout << "other " << temp->point[j] << " " << min[j] << " " << max[j] << endl;
+
+			if( (min[j] > temp->point[j] ) || (max[j] < temp->point[j])){
+				//cout << "broken";
+				break;
+			}
+		}
+		if(j==k){
+			//cout << "hey " ;
+			cout << "{";
+			for(int p=0;p<k-1;p++)
+				cout << temp->point[p] <<",";
+			cout << temp->point[k-1] << "}" << endl;
+		}
+		range_search(temp->right, point1, point2, depth + 1);
+		range_search(temp->left, point1, point2, depth + 1);
+	}
 	
 }
 
@@ -168,20 +204,18 @@ void printPostorder(struct Node* node)
 		cout << "null ";
 		return;
 	}
-        
-
 
  
     // first recur on left subtree
     printPostorder(node->left);
 
 			 // now deal with the node
-	if(node==root) cout << "\t";
+	if(node==root) cout << "\t[ ";
 	cout << "{ " ;
 	for(int i=0;i<k;i++)
     	cout << node->point[i] << " ";
 	cout << "} " ;
-	if(node==root) cout << "\t";
+	if(node==root) cout << "]\t";
  
     // then recur on right subtree
     printPostorder(node->right);
@@ -209,14 +243,16 @@ int main()
 	//printTree();
 	printPostorder(root);
 
-
+	
 	cout << endl;
 	 
-	int point1[] = {10, 116};
+	int point1[] = {3, 7};
 	(search(point1))? cout  << "Found\n": cout << "Not Found\n";
 
-	int point2[] = {10, 19};
+	int point2[] = {20, 39};
 	(search(point2))? cout << "Found\n": cout << "Not Found\n";
+	cout << "ranged search: " << endl;
+	range_search(root, point1, point2, 0);
 
 	return 0;
 }
