@@ -1,6 +1,7 @@
 // A C++ program to demonstrate operations of KD tree
 #include<bits/stdc++.h>
 using namespace std;
+#define COUNT 10
 
 const int k = 2;
 int total_height = 0;
@@ -127,15 +128,6 @@ bool search(int point[]){
 
 }
 
-bool FindPoint(int x1, int y1, int x2,
-               int y2, int x, int y)
-{
-    if (x >= x1 and x <= x2 and y >= y1 and y <= y2)
-        return true;
- 
-    return false;
-}
-
 
 void range_search(Node* temp, int point1[], int point2[], int depth){
     // Base cases
@@ -223,6 +215,81 @@ void printPostorder(struct Node* node)
    
 }
 
+void printTree(int n){
+
+
+	
+
+	if (root == NULL)
+	    return;
+	
+	
+if (root == NULL)
+	    return;
+	
+	int point[] = {32,53};
+	struct Node *temp;
+	struct Node *storage[n];
+	int size = 0;
+
+	storage[size] = root;
+	//storage[++size] = newNode(point);
+
+	
+	temp = storage[size]; 
+	
+	cout << "printing: " <<temp->point[0] << " " <<  temp->point[1] << endl;
+
+
+/*
+	while(1){
+		//cout << endl << temp->point[0] << " " << temp->point[1] ;
+		
+		if (check_equal(temp->point, point))
+			return true;
+		// Calculate current dimension (cd) of comparison
+		unsigned cd = height % k;
+
+		if (point[cd] < (temp->point[cd]))
+			temp = temp->left;
+		else 
+			temp = temp->right;
+
+		height++;
+
+		if (temp == NULL)
+			return false;
+	}
+	*/
+
+}
+
+
+
+void print2DUtil(Node *root, int space)
+{
+    // Base case
+    if (root == NULL)
+        return;
+ 
+    // Increase distance between levels
+    space += COUNT;
+ 
+    // Process right child first
+    print2DUtil(root->right, space);
+ 
+    // Print current node after space
+    // count
+    cout<<endl;
+    for (int i = COUNT; i < space; i++)
+        cout<<" ";
+    cout<<root->point[0]<<","<<root->point[1]<<"\n";
+ 
+    // Process left child
+    print2DUtil(root->left, space);
+}
+ 
+ 
 
 // Driver program to test above functions
 int main()
@@ -240,19 +307,20 @@ int main()
 
 	cout << endl << "total height = " << total_height << endl;
 
-	//printTree();
-	printPostorder(root);
+	//printTree(n);
+	//printPostorder(root);
+	print2DUtil(root,0);
 
 	
 	cout << endl;
 	 
 	int point1[] = {3, 7};
-	(search(point1))? cout  << "Found\n": cout << "Not Found\n";
+	//(search(point1))? cout  << "Found\n": cout << "Not Found\n";
 
 	int point2[] = {20, 39};
-	(search(point2))? cout << "Found\n": cout << "Not Found\n";
-	cout << "ranged search: " << endl;
-	range_search(root, point1, point2, 0);
+	//(search(point2))? cout << "Found\n": cout << "Not Found\n";
+	//cout << "ranged search: " << endl;
+	//range_search(root, point1, point2, 0);
 
 	return 0;
 }
