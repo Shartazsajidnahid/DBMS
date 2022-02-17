@@ -26,13 +26,12 @@ struct Node* newNode(int arr[])
 }
 
 
-
 void insert(int point[])
 {
 	unsigned height = 0;
 
 	if (root == NULL){
-		int point1[] = {1, 1};
+		//int point1[] = {1, 1};
 		root =  newNode(point);
 	//	root->right = newNode(point1);
 		return;
@@ -77,7 +76,7 @@ void insert(int point[])
 		prev->right = newNode(point);
 	   // cout << "right " << endl;
 	}
-		
+	
 	if(height>total_height) total_height = height;	
 }
 
@@ -96,6 +95,7 @@ bool check_equal(int point1[], int point2[])
 
 // Searches a Point represented by "point[]" in the K D tree.
 // The parameter depth is used to determine current axis.
+
 
 bool search(int point[]){
 	unsigned height = 0;
@@ -125,7 +125,6 @@ bool search(int point[]){
 			return false;
 	}
 
-
 }
 
 
@@ -134,9 +133,8 @@ void range_search(Node* temp, int point1[], int point2[], int depth){
     if (temp == NULL)
         return;
 
-  //  if (arePointsSame(root->point, point))
+	 //  if (arePointsSame(root->point, point))
     //    return true;
-
 
 	// calculating limits 
 
@@ -151,11 +149,11 @@ void range_search(Node* temp, int point1[], int point2[], int depth){
 	}
 	
 	//cout << "limits: " ;
-	for(int i=0;i<k;i++){
+	//for(int i=0;i<k;i++){
 		
 		//cout<<	min[i] << " " << max[i] << endl;
 		
-	}
+	//}
     // Current dimension is computed using current depth and total
     // dimensions (k)
     unsigned cd = depth % k;
@@ -190,103 +188,37 @@ void range_search(Node* temp, int point1[], int point2[], int depth){
 	
 }
 
-void printPostorder(struct Node* node)
-{
-    if (node == NULL){
-		cout << "null ";
-		return;
-	}
-
- 
-    // first recur on left subtree
-    printPostorder(node->left);
-
-			 // now deal with the node
-	if(node==root) cout << "\t[ ";
-	cout << "{ " ;
-	for(int i=0;i<k;i++)
-    	cout << node->point[i] << " ";
-	cout << "} " ;
-	if(node==root) cout << "]\t";
- 
-    // then recur on right subtree
-    printPostorder(node->right);
- 
-   
-}
-
-void printTree(int n){
-
-
-	
-
-	if (root == NULL)
-	    return;
-	
-	
-if (root == NULL)
-	    return;
-	
-	int point[] = {32,53};
-	struct Node *temp;
-	struct Node *storage[n];
-	int size = 0;
-
-	storage[size] = root;
-	//storage[++size] = newNode(point);
-
-	
-	temp = storage[size]; 
-	
-	cout << "printing: " <<temp->point[0] << " " <<  temp->point[1] << endl;
-
-
-/*
-	while(1){
-		//cout << endl << temp->point[0] << " " << temp->point[1] ;
-		
-		if (check_equal(temp->point, point))
-			return true;
-		// Calculate current dimension (cd) of comparison
-		unsigned cd = height % k;
-
-		if (point[cd] < (temp->point[cd]))
-			temp = temp->left;
-		else 
-			temp = temp->right;
-
-		height++;
-
-		if (temp == NULL)
-			return false;
-	}
-	*/
-
-}
 
 
 
-void print2DUtil(Node *root, int space)
+
+
+
+void printTree(Node *temp, int space)
 {
     // Base case
-    if (root == NULL)
+    if (temp == NULL)
         return;
  
     // Increase distance between levels
     space += COUNT;
  
     // Process right child first
-    print2DUtil(root->right, space);
+    printTree(temp->right, space);
  
-    // Print current node after space
-    // count
+    // Print current node after space count
     cout<<endl;
+
     for (int i = COUNT; i < space; i++)
         cout<<" ";
-    cout<<root->point[0]<<","<<root->point[1]<<"\n";
+	
+	for(int i=0; i<k-1; i++)
+		 cout<<temp->point[0]<<",";
+	cout << temp->point[k-1];
+	cout << endl; 
  
     // Process left child
-    print2DUtil(root->left, space);
+    printTree(temp->left, space);
 }
  
  
@@ -309,7 +241,7 @@ int main()
 
 	//printTree(n);
 	//printPostorder(root);
-	print2DUtil(root,0);
+	printTree(root,0);
 
 	
 	cout << endl;
@@ -319,8 +251,10 @@ int main()
 
 	int point2[] = {20, 39};
 	//(search(point2))? cout << "Found\n": cout << "Not Found\n";
-	//cout << "ranged search: " << endl;
-	//range_search(root, point1, point2, 0);
+
+	cout << "ranged search: " << endl;
+	range_search(root, point1, point2, 0);
 
 	return 0;
 }
+
