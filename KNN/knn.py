@@ -1,4 +1,5 @@
 from cmath import sqrt
+from hashlib import new
 import operator
 import numpy as np
 from PIL import Image
@@ -7,28 +8,27 @@ from math import *
 
 import glob
 
-sunfile = glob.glob("/home/nahid/Downloads/sun/*")
-moonfile = glob.glob("/home/nahid/Downloads/moon/*")
+sunfile = glob.glob("/home/nahid/Documents/desert/*")
+moonfile = glob.glob("/home/nahid/Documents/Snow/*")
 
 
-newimg = Image.open("/home/nahid/Downloads/newmoon.jpeg")
+newimg = Image.open("/home/nahid/Documents/4.jpg")
 newimg.show()
 
 #img  = Image
-newimg.resize((200,200))
-
-# .open("/home/nahid/Downloads/sun/sun1.jpeg")
-
-
+newimg.resize((300,300))
 
 newa = asarray(newimg)
 newa = np.reshape(newa, (np.product(newa.shape),)) 
-
+# newimg_data = newimg.getdata()
+# newa = np.array(newimg_data)
+# newa = newa.flatten()
 
 dr = list()
-for file in sunfile: 
-    img = Image.open(file)
-    img.resize((200,200))
+
+def calc_distance(img,type):
+    # print("hey")
+    img.resize((300,300))
     sunimg = img.getdata()
     suna = np.array(sunimg)
     suna = suna.flatten()
@@ -37,24 +37,20 @@ for file in sunfile:
     for i in range(400):
         dis += (newa[i] - suna[i])**2
     dis = sqrt(dis)
-    dr.append([dis,"sun"])
+    dr.append([dis,type])
+
+
+
+for file in sunfile: 
+    img = Image.open(file)
+    calc_distance(img,'desert')
 
   
 
 for file in moonfile: 
     img = Image.open(file)
-    img.resize((200,200))
+    calc_distance(img,'snow')
     
-    moonimg = img.getdata()
-    moona = np.array(moonimg)
-    moona = moona.flatten()
-    
-    #x = getmin(len(moona), len(newa))
-    dis = 0
-    for i in range(400):
-        dis += (newa[i] - moona[i])**2
-    dis = sqrt(dis)
-    dr.append([dis,"moon"])
 
 
 dr = sorted(dr, key=lambda x: x[0])
@@ -67,7 +63,7 @@ n_moon = 0
 
 for dis in dr:
     #print(dis[1])
-    if(dis[1]=='sun'):
+    if(dis[1]=='desert'):
         n_sun+=1
     else:
         n_moon+=1
@@ -76,9 +72,8 @@ for dis in dr:
         break
 
 if(n_sun>n_moon):
-    print("The image is a sun type")
+    print("The image is a Desert type")
 else: 
-    print("The image is a moon type")
-
+    print("The image is a Snow type")
 
 # print(dr)
